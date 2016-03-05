@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import java.text.DecimalFormat;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -14,6 +16,7 @@ public class CalcActivity extends Activity {
 
     protected EditText txtResultado;
     protected Queue<String> collection;
+    protected float result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +25,7 @@ public class CalcActivity extends Activity {
 
         this.txtResultado = (EditText) findViewById(R.id.txt_resultado);
         collection = new LinkedList<>();
+        this.result = 0;
 
     }
 
@@ -100,12 +104,38 @@ public class CalcActivity extends Activity {
             collection.add("/");
             this.txtResultado.setText("");
         }
-        else if(findViewById(R.id.btn_equals) == view){
-            
-        }
     }
 
     public void clearScreen(View view) {
         this.txtResultado.setText("");
+    }
+
+    public void calculationResult(View view){
+        Iterator<String> iterator= collection.iterator();
+        String resultado = this.txtResultado.getText().toString();
+        collection.add(resultado);
+
+        while (iterator.hasNext()){
+            String element = collection.remove();
+            switch (element){
+                case "+":
+                    this.result = this.result + Float.parseFloat(collection.remove());
+                    break;
+                case "-":
+                    this.result = this.result - Float.parseFloat(collection.remove());
+                    break;
+                case "/":
+                    this.result = this.result / Float.parseFloat(collection.remove());
+                    break;
+                case "*":
+                    this.result = this.result * Float.parseFloat(collection.remove());
+                    break;
+                default:
+                    this.result = Float.parseFloat(element);
+                    break;
+            }
+        }
+        DecimalFormat df = new DecimalFormat("0.00");
+        this.txtResultado.setText(df.format(this.result));
     }
 }

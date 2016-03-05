@@ -188,7 +188,7 @@
         android:layout_marginTop="31dp"
         android:layout_below="@+id/txt_resultado"
         android:layout_alignEnd="@+id/btn_plus"
-        android:onClick="calcula"/>
+        android:onClick="calculationResult"/>
 
     <Button
         style="?android:attr/buttonStyleSmall"
