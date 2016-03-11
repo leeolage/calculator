@@ -1,13 +1,14 @@
 package com.codecleanms.calculator;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -17,6 +18,7 @@ public class CalcActivity extends Activity {
     protected EditText txtResultado;
     protected Queue<String> collection;
     protected float result;
+    protected Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,8 @@ public class CalcActivity extends Activity {
         this.txtResultado = (EditText) findViewById(R.id.txt_resultado);
         collection = new LinkedList<>();
         this.result = 0;
+
+        context = getApplicationContext();
 
     }
 
@@ -84,6 +88,9 @@ public class CalcActivity extends Activity {
         else if(findViewById(R.id.btn_zero) == view){
             this.txtResultado.setText(String.format("%s0", resultado));
         }
+        else if(findViewById(R.id.btn_point) == view){
+            this.txtResultado.setText(String.format("%s.", resultado));
+        }
         else if(findViewById(R.id.btn_plus) == view){
             collection.add(resultado);
             collection.add("+");
@@ -108,34 +115,40 @@ public class CalcActivity extends Activity {
 
     public void clearScreen(View view) {
         this.txtResultado.setText("");
+        this.collection.clear();
     }
 
     public void calculationResult(View view){
-        Iterator<String> iterator= collection.iterator();
-        String resultado = this.txtResultado.getText().toString();
-        collection.add(resultado);
 
-        while (iterator.hasNext()){
-            String element = collection.remove();
-            switch (element){
-                case "+":
-                    this.result = this.result + Float.parseFloat(collection.remove());
-                    break;
-                case "-":
-                    this.result = this.result - Float.parseFloat(collection.remove());
-                    break;
-                case "/":
-                    this.result = this.result / Float.parseFloat(collection.remove());
-                    break;
-                case "*":
-                    this.result = this.result * Float.parseFloat(collection.remove());
-                    break;
-                default:
-                    this.result = Float.parseFloat(element);
-                    break;
+        String resultado = this.txtResultado.getText().toString();
+        if("".equals(resultado)){
+            Toast toast = Toast.makeText(context, "Digite um número!", Toast.LENGTH_SHORT);
+            toast.show();
+        }else{
+            Iterator<String> iterator= collection.iterator();
+            collection.add(resultado);
+
+            while (iterator.hasNext()){
+                String element = collection.remove();
+                switch (element){
+                    case "+":
+                        this.result = this.result + Float.parseFloat(collection.remove());
+                        break;
+                    case "-":
+                        this.result = this.result - Float.parseFloat(collection.remove());
+                        break;
+                    case "/":
+                        this.result = this.result / Float.parseFloat(collection.remove());
+                        break;
+                    case "*":
+                        this.result = this.result * Float.parseFloat(collection.remove());
+                        break;
+                    default:
+                        this.result = Float.parseFloat(element);
+                        break;
+                }
             }
+            this.txtResultado.setText(String.valueOf(this.result));
         }
-        DecimalFormat df = new DecimalFormat("0.00");
-        this.txtResultado.setText(df.format(this.result));
     }
 }
