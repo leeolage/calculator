@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Iterator;
@@ -19,6 +21,7 @@ public class CalcActivity extends Activity {
     protected Queue<String> collection;
     protected float result;
     protected Context context;
+    protected TextView txtHistorico;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +29,8 @@ public class CalcActivity extends Activity {
         setContentView(R.layout.activity_calc);
 
         this.txtResultado = (EditText) findViewById(R.id.txt_resultado);
-        collection = new LinkedList<>();
+        this.txtHistorico = (TextView) findViewById(R.id.txt_historico);
+        this.collection = new LinkedList<>();
         this.result = 0;
 
         context = getApplicationContext();
@@ -56,65 +60,25 @@ public class CalcActivity extends Activity {
     }
 
     public void calcula(View view) {
+        Button btnOperacao = (Button) view;
         String resultado = this.txtResultado.getText().toString();
+        String operador = btnOperacao.getText().toString();
+        String historico = this.txtHistorico.getText().toString();
 
-        if(findViewById(R.id.btn_one) == view){
-            this.txtResultado.setText(String.format("%s1", resultado));
-        }
-        else if(findViewById(R.id.btn_two) == view){
-            this.txtResultado.setText(String.format("%s2", resultado));
-        }
-        else if(findViewById(R.id.btn_three) == view){
-            this.txtResultado.setText(String.format("%s3", resultado));
-        }
-        else if(findViewById(R.id.btn_four) == view){
-            this.txtResultado.setText(String.format("%s4", resultado));
-        }
-        else if(findViewById(R.id.btn_five) == view){
-            this.txtResultado.setText(String.format("%s5", resultado));
-        }
-        else if(findViewById(R.id.btn_six) == view){
-            this.txtResultado.setText(String.format("%s6", resultado));
-        }
-        else if(findViewById(R.id.btn_seven) == view){
-            this.txtResultado.setText(String.format("%s7", resultado));
-        }
-        else if(findViewById(R.id.btn_eigth) == view){
-            this.txtResultado.setText(String.format("%s8", resultado));
-        }
-        else if(findViewById(R.id.btn_nine) == view){
-            this.txtResultado.setText(String.format("%s9", resultado));
-        }
-        else if(findViewById(R.id.btn_zero) == view){
-            this.txtResultado.setText(String.format("%s0", resultado));
-        }
-        else if(findViewById(R.id.btn_point) == view){
-            this.txtResultado.setText(String.format("%s.", resultado));
-        }
-        else if(findViewById(R.id.btn_plus) == view){
+        this.txtResultado.setText(String.format("%s" + operador, resultado));
+        this.txtHistorico.setText(String.format("%s" + operador, historico));
+
+        if("+".equals(operador) || "-".equals(operador) || "*".equals(operador) || "/".equals(operador)){
             collection.add(resultado);
-            collection.add("+");
+            collection.add(operador);
             this.txtResultado.setText("");
-        }
-        else if(findViewById(R.id.btn_minus) == view){
-            collection.add(resultado);
-            collection.add("-");
-            this.txtResultado.setText("");
-        }
-        else if(findViewById(R.id.btn_times) == view){
-            collection.add(resultado);
-            collection.add("*");
-            this.txtResultado.setText("");
-        }
-        else if(findViewById(R.id.btn_divide) == view){
-            collection.add(resultado);
-            collection.add("/");
-            this.txtResultado.setText("");
+            this.txtHistorico.setText(String.format("%s" + operador, historico));
         }
     }
 
     public void clearScreen(View view) {
         this.txtResultado.setText("");
+        this.txtHistorico.setText("");
         this.collection.clear();
     }
 
